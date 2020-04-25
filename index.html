@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        function  game(times) {
+                let userWins = 0;
+                let computerWins = 0;
+                while (times > 0) {
+                    let userSelection = prompt("Rock, Paper or Scissors?");
+                    let computerSelection = computerPlay();
+                    console.log(`Round result: ${playRound(userSelection, computerSelection)}`);
+                    times--;
+                }
+                console.log(`Game result : ${(userWins > computerWins) ? "You win!" : "You lose"}`);
+            };
+
+        function playRound(userSelection, computerSelection) {
+            userSelection = userSelection.toUpperCase();
+            computerSelection = computerSelection.toUpperCase();
+
+            switch(userSelection) {
+                case "ROCK":
+                if (computerSelection == "ROCK") return "Tie. Both selected Rock";
+                if (computerSelection == "PAPER") return "You loose. Paper beat Rock(you)";
+                if (computerSelection == "SCISSORS") return "You win. Rock(You) beats Scissors";
+                case "PAPER":
+                if (computerSelection == "ROCK") return "You win. Paper(you) beats Rock";
+                if (computerSelection == "PAPER") return "Tie. Both selected Paper";
+                if (computerSelection == "SCISSORS") return "You loose. Scissors beats Paper(you)";
+                case "SCISSORS":
+                if (computerSelection == "ROCK") return "You loose. Rock beats Scissors(you)";
+                if (computerSelection == "PAPER") return "You win. Scissors(you) beats Paper";
+                if (computerSelection == "SCISSORS") return "Tie. Both selected Scissors";
+                default:
+                "Please select one of the three options"
+            }
+        }
+
+        function computerPlay() {
+            let options = ["Rock", "Paper", "Scissors"];
+            let option = Math.floor(Math.random() * 3);
+            return options[option]; 
+        }
+    </script>
+</body>
+</html>
