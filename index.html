@@ -14,10 +14,15 @@
                 while (times > 0) {
                     let userSelection = prompt("Rock, Paper or Scissors?");
                     let computerSelection = computerPlay();
-                    console.log(`Round result: ${playRound(userSelection, computerSelection)}`);
+                    let roundResult = playRound(userSelection, computerSelection);
+                    console.log(`Round result: ${roundResult}`);
+                    if (roundResult.search("win") > 0) userWins++
+                    else if (roundResult.search("loose") > 0) computerWins++;
                     times--;
                 }
-                console.log(`Game result : ${(userWins > computerWins) ? "You win!" : "You lose"}`);
+
+                console.log(`Final result is: ${(userWins > computerWins) ? "You win!" : 
+                                                (userWins === computerWins) ? "Tie!" : "Loose"}`)
             };
 
         function playRound(userSelection, computerSelection) {
