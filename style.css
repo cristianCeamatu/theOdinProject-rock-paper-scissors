@@ -16,7 +16,7 @@ body {
     text-align: center;
     display: flex;
     justify-content: center;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 button {
@@ -67,6 +67,7 @@ button:active {
     padding: 10px;
     width: 80px;
     border-radius: 50px;
+    text-align: center;
 }
 
 .showcase .play {
