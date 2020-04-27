@@ -3,55 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Javascript Rock, Paper and Scissors game!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <script>
+    <div class="container">
+        <main class="showcase">
+            <h1>Javascript Rock, Paper and Scissor game, enjoy!</h1>
+            <section class="rounds-selection">
+                <form action="#">
+                    <label for="rounds">How many rounds you want to play? (5-20)</label>
+                    <input type="number" name="rounds" id="rounds" value="5" min="5" max="20">
+                </form>
+                <button class="play"><i class="fas fa-play"></i> Play</button>
+            </section>
 
-        function  game(times) {
-                let userWins = 0;
-                let computerWins = 0;
-                while (times > 0) {
-                    let userSelection = prompt("Rock, Paper or Scissors?");
-                    let computerSelection = computerPlay();
-                    let roundResult = playRound(userSelection, computerSelection);
-                    console.log(`Round result: ${roundResult}`);
-                    if (roundResult.search("win") > 0) userWins++
-                    else if (roundResult.search("loose") > 0) computerWins++;
-                    times--;
-                }
+            <section class="options">
+                <h3>Please select an option:</h3>
+                <button class="option" id="rock"><i class="fas fa-hand-rock" aria-hidden="true"></i> Rock</button>
+                <button class="option" id="paper"><i class="fas fa-hand-paper"></i> Paper</button>
+                <button class="option" id="scissors"><i class="fas fa-hand-scissors"></i> Scissors</button>
+            </section>
 
-                console.log(`Final result is: ${(userWins > computerWins) ? "You win!" : 
-                                                (userWins === computerWins) ? "Tie!" : "Loose"}`)
-            };
+            <section class="results">
+                <h3 class="final-result"></h3>
+                <p class="counts hide"><span id="user-counts">0</span> - <span id="computer-counts">0</span></p>
+            </section>
+        </main>
+    </div>
 
-        function playRound(userSelection, computerSelection) {
-            userSelection = userSelection.toUpperCase();
-            computerSelection = computerSelection.toUpperCase();
 
-            switch(userSelection) {
-                case "ROCK":
-                if (computerSelection == "ROCK") return "Tie. Both selected Rock";
-                if (computerSelection == "PAPER") return "You loose. Paper beat Rock(you)";
-                if (computerSelection == "SCISSORS") return "You win. Rock(You) beats Scissors";
-                case "PAPER":
-                if (computerSelection == "ROCK") return "You win. Paper(you) beats Rock";
-                if (computerSelection == "PAPER") return "Tie. Both selected Paper";
-                if (computerSelection == "SCISSORS") return "You loose. Scissors beats Paper(you)";
-                case "SCISSORS":
-                if (computerSelection == "ROCK") return "You loose. Rock beats Scissors(you)";
-                if (computerSelection == "PAPER") return "You win. Scissors(you) beats Paper";
-                if (computerSelection == "SCISSORS") return "Tie. Both selected Scissors";
-                default:
-                "Please select one of the three options"
+<script>
+    const playButton = document.querySelector('.rounds-selection .play');
+    playButton.addEventListener('click', startGame);
+
+    
+    function startGame(event) {
+        // Getting used elements
+        const roundsSection = document.querySelector('.rounds-selection');
+        const optionsSection = document.querySelector('.options');
+        const resultsSection = document.querySelector('.results');
+        const counts = document.querySelector('.counts');
+        const userCounts = document.querySelector('#user-counts');
+        const computerCounts = document.querySelector('#computer-counts');
+        const heading = document.querySelector('.final-result');
+
+        // Switch to game started
+        roundsSection.classList.add('hide');
+        optionsSection.classList.add('show');
+        counts.classList.remove('hide');
+
+        // Reseting all results counts
+        heading.innerText = '';
+        userCounts.innerText = 0;
+        computerCounts.innerText = 0;
+
+        // Initializing counting variables
+        let userWins = 0;
+        let computerWins = 0;
+        let rounds = document.querySelector('input#rounds').value;
+        let roundsPlayed = 0;
+
+        // Adding event listenere for all game options when clicked
+        [...document.querySelectorAll('button.option')].forEach((option) => {
+        option.addEventListener('click', (event) => {
+            // Get the result from selected option againt random computer option
+            const roundResult = playRound(event.target.id.toUpperCase(), computerPlay());
+            if(roundResult.search('win') > 0) userWins++;
+            if(roundResult.search('loose') > 0) computerWins++;
+            roundsPlayed++;
+
+            // Update the UI with the current game state
+            heading.innerText = `Round ${roundsPlayed} - ` + roundResult;
+            userCounts.innerText = userWins;
+            computerCounts.innerText = computerWins;
+            
+            // If this is the last round
+            if (roundsPlayed > rounds - 1) {
+                // Initialize, set the final result and display it
+                let finalResult;
+                if (userWins > computerWins) finalResult = 'You Win!';
+                else if (userWins < computerWins) finalResult = 'You Loose!';
+                else finalResult = 'It is a tie!';
+                // Add the final result after 1s so the user can see the last round result
+                setTimeout(() => {
+                    heading.textContent = `Final result: ${finalResult} \n Score: ${userWins} - ${computerWins}`;
+                    // Hide the bottom counts when displaying the final result
+                    counts.classList.add('hide');
+                }, 1000);
+
+                // Switch to play game and reset rounds played
+                roundsPlayed = 0;
+                roundsSection.classList.remove('hide');
+                optionsSection.classList.remove('show');
             }
-        }
+            });
+        });
+    }
 
-        function computerPlay() {
-            let options = ["Rock", "Paper", "Scissors"];
-            let option = Math.floor(Math.random() * 3);
-            return options[option]; 
+
+    function playRound(userSelection, computerSelection) {
+
+        switch(userSelection) {
+            case "ROCK":
+            if (computerSelection == "ROCK") return "Tie. Both selected Rock";
+            if (computerSelection == "PAPER") return "You loose. Paper beat Rock(you)";
+            if (computerSelection == "SCISSORS") return "You win. Rock(You) beats Scissors";
+            case "PAPER":
+            if (computerSelection == "ROCK") return "You win. Paper(you) beats Rock";
+            if (computerSelection == "PAPER") return "Tie. Both selected Paper";
+            if (computerSelection == "SCISSORS") return "You loose. Scissors beats Paper(you)";
+            case "SCISSORS":
+            if (computerSelection == "ROCK") return "You loose. Rock beats Scissors(you)";
+            if (computerSelection == "PAPER") return "You win. Scissors(you) beats Paper";
+            if (computerSelection == "SCISSORS") return "Tie. Both selected Scissors";
+            default:
+            "Please select one of the three options";
         }
-    </script>
+    }
+
+    function computerPlay() {
+        let options = ["ROCK", "PAPER", "SCISSORS"];
+        let option = Math.floor(Math.random() * 3);
+        return options[option]; 
+    }
+
+</script>
 </body>
 </html>
