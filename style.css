@@ -89,6 +89,12 @@ button:active {
     box-shadow: inset 5px 5px 10px -6px rgba(3,3,3,0.68);
 }
 
+.showcase .results .counts {
+    position: relative;
+    bottom: -20px;
+    color: #9c9c9c;
+}
+
 .show {
     display: block!important;
 }

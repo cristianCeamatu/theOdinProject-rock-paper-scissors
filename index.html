@@ -13,7 +13,7 @@
             <h1>Javascript Rock, Paper and Scissor game, enjoy!</h1>
             <section class="rounds-selection">
                 <form action="#">
-                    <label for="rounds">How many rounds you want to play? (5-20)</label>
+                    <label for="rounds">How many rounds you want to play? <br>(5-20)</label>
                     <input type="number" name="rounds" id="rounds" value="5" min="5" max="20">
                 </form>
                 <button class="play"><i class="fas fa-play"></i> Play</button>
@@ -49,55 +49,58 @@
         const computerCounts = document.querySelector('#computer-counts');
         const heading = document.querySelector('.final-result');
 
-        // Switch to game started
-        roundsSection.classList.add('hide');
-        optionsSection.classList.add('show');
-        counts.classList.remove('hide');
-
         // Reseting all results counts
         heading.innerText = '';
         userCounts.innerText = 0;
         computerCounts.innerText = 0;
+        let optionsClone = optionsSection.cloneNode(true);
+        optionsSection.replaceWith(optionsClone);
+
+        // Switch the UI to game started
+        roundsSection.classList.add('hide');
+        optionsClone.classList.add('show');
+        counts.classList.remove('hide');
 
         // Initializing counting variables
         let userWins = 0;
         let computerWins = 0;
-        let rounds = document.querySelector('input#rounds').value;
+        let rounds = Number(document.querySelector('input#rounds').value);
         let roundsPlayed = 0;
 
         // Adding event listenere for all game options when clicked
         [...document.querySelectorAll('button.option')].forEach((option) => {
-        option.addEventListener('click', (event) => {
-            // Get the result from selected option againt random computer option
-            const roundResult = playRound(event.target.id.toUpperCase(), computerPlay());
-            if(roundResult.search('win') > 0) userWins++;
-            if(roundResult.search('loose') > 0) computerWins++;
-            roundsPlayed++;
+            option.addEventListener('click', (event) => {
+                // Get the result from selected option againt random computer option
+                const roundResult = playRound(event.target.id.toUpperCase(), computerPlay());
+                if(roundResult.search('win') > 0) userWins++;
+                if(roundResult.search('loose') > 0) computerWins++;
+                roundsPlayed++;
 
-            // Update the UI with the current game state
-            heading.innerText = `Round ${roundsPlayed} - ` + roundResult;
-            userCounts.innerText = userWins;
-            computerCounts.innerText = computerWins;
-            
-            // If this is the last round
-            if (roundsPlayed > rounds - 1) {
-                // Initialize, set the final result and display it
-                let finalResult;
-                if (userWins > computerWins) finalResult = 'You Win!';
-                else if (userWins < computerWins) finalResult = 'You Loose!';
-                else finalResult = 'It is a tie!';
-                // Add the final result after 1s so the user can see the last round result
-                setTimeout(() => {
-                    heading.textContent = `Final result: ${finalResult} \n Score: ${userWins} - ${computerWins}`;
-                    // Hide the bottom counts when displaying the final result
-                    counts.classList.add('hide');
-                }, 1000);
+                // Update the UI with the current game state
+                heading.innerText = `Round ${roundsPlayed} \n ` + roundResult;
+                userCounts.innerText = userWins;
+                computerCounts.innerText = computerWins;
+                console.log(roundsPlayed, rounds, userWins, computerWins);
+                // If this is the last round
+                if (roundsPlayed > rounds - 1) {
+                    // Initialize, set the final result and display it
+                    let finalResult;
+                    if (userWins > computerWins) finalResult = 'You Win!';
+                    else if (userWins < computerWins) finalResult = 'You Loose!';
+                    else finalResult = 'It is a tie!';
 
-                // Switch to play game and reset rounds played
-                roundsPlayed = 0;
-                roundsSection.classList.remove('hide');
-                optionsSection.classList.remove('show');
-            }
+                    optionsClone.classList.remove('show');
+                    // Add the final result after 1s so the user can see the last round result
+                    setTimeout(() => {
+                        heading.textContent = `Final result: ${finalResult} \n Score: ${userWins} - ${computerWins}`;
+                        // Hide the bottom counts when displaying the final result
+                        counts.classList.add('hide');
+                        // Switch to play game and reset rounds played
+                        roundsPlayed = 0;
+                        roundsSection.classList.remove('hide');
+
+                    }, 2000);
+                }
             });
         });
     }
